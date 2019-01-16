@@ -80,7 +80,7 @@ class CategoryHeader extends Component {
       <ExpandableHeader
         onClick={e => {
           e.preventDefault();
-          if (!this.isVisible) {
+          if (this.isVisible !== 0) {
             return;
           }
           setExpanded(!isExpanded);
