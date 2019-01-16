@@ -5,6 +5,7 @@ import _ from 'lodash';
 import { StickyContainer } from 'react-sticky';
 import Category from './modules/Category';
 import ReactTooltip from 'react-tooltip';
+import FixedHeader from './modules/FixedHeader';
 
 const allRules = _.flatten(
   rulesCategories.map(cat => cat.rules.map(rule => rule.name))
@@ -24,13 +25,13 @@ export default class App extends Component {
         name: 'airbnb',
         icon: require('./img/airbnb-icon.png'),
         rules: require('./data/configs/airbnb-base.json'),
-        enabled: true
+        enabled: false
       },
       {
         name: 'eslint-recommended',
         icon: require('./img/eslint-recommended-icon.png'),
         rules: require('./data/configs/eslint-recommended.json'),
-        enabled: true
+        enabled: false
       },
       {
         name: 'google',
@@ -42,7 +43,67 @@ export default class App extends Component {
         name: 'standard',
         icon: require('./img/standard-icon.png'),
         rules: require('./data/configs/standard.json'),
+        enabled: false
+      },
+      {
+        name: 'Account',
+        icon: '#008000',
+        rules: require('./data/configs/oreilly-account.json'),
+        enabled: false
+      },
+      {
+        name: 'Case Studies',
+        icon: '#008b8b',
+        rules: require('./data/configs/oreilly-case-studies.json'),
+        enabled: false
+      },
+      {
+        name: 'Chassis',
+        icon: '#dc143c',
+        rules: require('./data/configs/oreilly-chassis.json'),
         enabled: true
+      },
+      {
+        name: 'Heron',
+        icon: '#0000cd',
+        rules: require('./data/configs/oreilly-heron.json'),
+        enabled: true
+      },
+      {
+        name: 'Home',
+        icon: '#4b0082',
+        rules: require('./data/configs/oreilly-home.json'),
+        enabled: false
+      },
+      {
+        name: 'Learning Paths',
+        icon: '#ffd700',
+        rules: require('./data/configs/oreilly-learning-paths.json'),
+        enabled: false
+      },
+      {
+        name: 'Playlists',
+        icon: '#00ced1',
+        rules: require('./data/configs/oreilly-playlists.json'),
+        enabled: true
+      },
+      {
+        name: 'Playlists Core',
+        icon: '#1e90ff',
+        rules: require('./data/configs/oreilly-playlists-core.json'),
+        enabled: true
+      },
+      {
+        name: 'Training',
+        icon: '#8b008b',
+        rules: require('./data/configs/oreilly-training.json'),
+        enabled: false
+      },
+      {
+        name: 'Video Client',
+        icon: '#3cb371',
+        rules: require('./data/configs/oreilly-video-client.json'),
+        enabled: false
       },
       {
         name: 'custom',
@@ -144,11 +205,13 @@ export default class App extends Component {
   };
 
   render() {
-    const categoryNodes = this.state.rulesCategories.map(category => {
+    const categoryNodes = this.state.rulesCategories.map((category, index) => {
       return (
         <Category
           key={category.title}
+          index={index}
           title={category.title}
+          urlPattern={category.urlPattern}
           rules={category.rules}
           configs={this.state.configs}
           enableConfig={this.enableConfig}
@@ -191,6 +254,12 @@ export default class App extends Component {
           </div>
         </Modal>
         <StickyContainer>
+          <FixedHeader
+            configs={this.state.configs}
+            enableConfig={this.enableConfig}
+            disableConfig={this.disableConfig}
+            showEditor={this.showEditor}
+          />
           {categoryNodes}
         </StickyContainer>
       </div>

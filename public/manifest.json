@@ -1,10 +1,10 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "ES Lint Comparer",
+  "name": "Compare ES Lint rule sets",
   "icons": [
     {
-      "src": "favicon.ico",
-      "sizes": "192x192",
+      "src": "favicon.512x512.png",
+      "sizes": "512x512",
       "type": "image/png"
     }
   ],

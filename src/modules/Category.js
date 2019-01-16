@@ -1,39 +1,43 @@
-import React from 'react';
+import React, { Component } from 'react';
 import Rule from './Rule';
-import FixedHeader from './FixedHeader';
+import CategoryHeader from './CategoryHeader';
 
-const Category = ({
-  title,
-  rules,
-  configs,
-  enableConfig,
-  disableConfig,
-  showEditor
-}) => {
-  const ruleNodes = rules.map(rule =>
-    <Rule
-      key={rule.name}
-      name={rule.name}
-      description={rule.description}
-      configs={configs}
-    />
-  );
-  return (
-    <div>
-      <FixedHeader
-        title={title}
+export default class Category extends Component {
+  state = {
+    isExpanded: true
+  };
+
+  handleSetExpanded = newState => {
+    this.setState({ isExpanded: newState });
+  };
+
+  render() {
+    const { title, index, urlPattern, rules, configs } = this.props;
+
+    const ruleNodes = rules.map(rule =>
+      <Rule
+        key={rule.name}
+        name={rule.name}
+        urlPattern={urlPattern}
+        description={rule.description}
         configs={configs}
-        enableConfig={enableConfig}
-        disableConfig={disableConfig}
-        showEditor={showEditor}
       />
-      <table>
-        <tbody>
-          {ruleNodes}
-        </tbody>
-      </table>
-    </div>
-  );
-};
+    );
 
-export default Category;
+    return (
+      <div>
+        <CategoryHeader
+          title={title}
+          index={index}
+          isExpanded={this.state.isExpanded}
+          setExpanded={this.handleSetExpanded}
+        />
+        <table style={{ display: this.state.isExpanded ? 'table' : 'none' }}>
+          <tbody>
+            {ruleNodes}
+          </tbody>
+        </table>
+      </div>
+    );
+  }
+}

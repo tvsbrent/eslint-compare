@@ -9,23 +9,23 @@ function getRuleCode(rule) {
   }
 
   switch (ruleValue) {
-    case 'off':
-      return 0;
     case 'warning':
       return 1;
     case 'error':
       return 2;
+    default:
+      return 0;
   }
 }
 
 function getRuleLabel(ruleCode) {
   switch (ruleCode) {
-    case 0:
-      return 'off';
     case 1:
       return 'warn';
     case 2:
       return 'error';
+    default:
+      return 'off';
   }
 }
 
@@ -47,7 +47,38 @@ function getTitleText(rule) {
   }
 }
 
-const Rule = ({ name, description, configs }) => {
+const getUrl = (() => {
+  const expressionRegExp = /\$\{(.*)\}/g;
+  const regExpType = /^\/.+\/[a-z]*$/g;
+  return (urlPattern, name) => {
+    if (!urlPattern) {
+      return `http://eslint.org/docs/rules/${name}`;
+    }
+    return urlPattern.replace(expressionRegExp, (match, ...args) => {
+      if (args.slice(0, -2).length === 0) {
+        return match;
+      }
+
+      let capture = args[0];
+
+      if (regExpType.test(capture)) {
+        // split it into the pattern and the flags
+        const closingSlash = capture.lastIndexOf('/');
+        const flags = capture.substring(closingSlash + 1);
+        capture = capture.substring(1, closingSlash);
+
+        const exp = new RegExp(capture, flags);
+        const result = exp.exec(name);
+        if (result) {
+          return result[result.length - 1];
+        }
+        return result;
+      }
+    });
+  };
+})();
+
+const Rule = ({ name, urlPattern, description, configs }) => {
   const ruleNodes = configs.filter(config => config.enabled).map(config => {
     const titleText = getTitleText(config.rules[name]);
     const ruleCode = getRuleCode(config.rules[name]);
@@ -67,7 +98,7 @@ const Rule = ({ name, description, configs }) => {
     <tr>
       {ruleNodes}
       <td>
-        <a href={`http://eslint.org/docs/rules/${name}`}>
+        <a href={getUrl(urlPattern, name)}>
           {name}
         </a>
       </td>
